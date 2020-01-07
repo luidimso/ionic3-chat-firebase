@@ -7,8 +7,10 @@ import { AngularFireModule, FirebaseAppConfig } from 'angularfire2';
 
 import { MyApp } from './app.component';
 import { firebaseConf } from '../config';
+import { UserService } from '../providers/user/user';
 
 const firebaseAppConfig:FirebaseAppConfig = firebaseConf;
+console.log(firebaseConf);
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ const firebaseAppConfig:FirebaseAppConfig = firebaseConf;
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    UserService
   ]
 })
 export class AppModule {}
