@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, IonicPage } from 'ionic-angular';
+import { FirebaseListObservable } from 'angularfire2';
+import { User } from '../../models/user.model';
+import { UserService } from '../../providers/user/user';
 
 @IonicPage()
 @Component({
@@ -8,7 +11,15 @@ import { NavController, IonicPage } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  users:FirebaseListObservable<User[]>;
+
+  constructor(public navCtrl: NavController, public userService:UserService) {}
+
+  ionViewDidLoad(){
+    this.users = this.userService.users;
+  }
+
+  onChatCreate(user:User):void{
 
   }
 
