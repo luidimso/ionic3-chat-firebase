@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Loading, LoadingController } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../providers/user/user';
 import { AuthService } from '../../providers/auth/auth';
@@ -14,7 +14,7 @@ export class SignupPage {
 
   signupForm:FormGroup;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public userService: UserService, public alertCtrl: AlertController, public authService: AuthService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder, public userService: UserService, public alertCtrl: AlertController, public authService: AuthService, public loadingCtrl:LoadingController) {
     let emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     this.signupForm = this.formBuilder.group({
@@ -30,6 +30,7 @@ export class SignupPage {
   }
 
   onSubmit():void {
+    let loading:Loading = this.showLoading();
     let formUser = this.signupForm.value;
 
     this.authService.createAuthUser({
@@ -40,13 +41,30 @@ export class SignupPage {
       formUser.userId = authState.auth.uid;
 
       this.userService.create(formUser).then(() => {
-        let alert = this.alertCtrl.create({
-          title: 'Usuário cadastrado',
-          subTitle: '',
-          buttons: ['OK']
-        });
-        alert.present();
+        loading.dismiss();
+      }).catch((error:any) => {
+        loading.dismiss();
+        this.showAlert(error);
       })
-    })
+    }).catch((error:any) => {
+      loading.dismiss();
+      this.showAlert(error);
+    });
+  }
+
+  private showLoading():Loading{
+    let loading:Loading = this.loadingCtrl.create({
+      content: "Pleace wait..."
+    });
+
+    loading.present();
+    return loading;
+  }
+
+  private showAlert(message:string):void{
+    this.alertCtrl.create({
+      message: message,
+      buttons:["OK"]
+    }).present();
   }
 }
