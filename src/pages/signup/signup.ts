@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from '../../providers/user/user';
 import { AuthService } from '../../providers/auth/auth';
 import { FirebaseAuthState } from 'angularfire2';
+import "rxjs/add/operator/first"
 
 @IonicPage()
 @Component({
@@ -32,24 +33,32 @@ export class SignupPage {
   onSubmit():void {
     let loading:Loading = this.showLoading();
     let formUser = this.signupForm.value;
+    let username:string = formUser.username;
 
-    this.authService.createAuthUser({
-      email: formUser.email,
-      password: formUser.password
-    }).then((authState:FirebaseAuthState) => {
-      delete formUser.password;
-      formUser.userId = authState.auth.uid;
+    this.userService.userExists(username).first().subscribe((userExists:boolean) => {
+      if(!userExists){
+        this.authService.createAuthUser({
+          email: formUser.email,
+          password: formUser.password
+        }).then((authState:FirebaseAuthState) => {
+          delete formUser.password;
+          formUser.userId = authState.auth.uid;
 
-      this.userService.create(formUser).then(() => {
+          this.userService.create(formUser).then(() => {
+            loading.dismiss();
+          }).catch((error:any) => {
+            loading.dismiss();
+            this.showAlert(error);
+          })
+        }).catch((error:any) => {
+          loading.dismiss();
+          this.showAlert(error);
+        });
+      } else {
         loading.dismiss();
-      }).catch((error:any) => {
-        loading.dismiss();
-        this.showAlert(error);
-      })
-    }).catch((error:any) => {
-      loading.dismiss();
-      this.showAlert(error);
-    });
+        this.showAlert("This username is already been used.");
+      }
+    })
   }
 
   private showLoading():Loading{
