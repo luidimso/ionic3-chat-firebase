@@ -45,6 +45,7 @@ export class SignupPage {
           formUser.userId = authState.auth.uid;
 
           this.userService.create(formUser).then(() => {
+            this.navCtrl.setRoot("HomePage");
             loading.dismiss();
           }).catch((error:any) => {
             loading.dismiss();
