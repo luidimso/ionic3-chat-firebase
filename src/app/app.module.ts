@@ -3,7 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-import { AngularFireModule, FirebaseAppConfig } from 'angularfire2';
+import { AngularFireModule, FirebaseAppConfig, AuthProviders, AuthMethods } from 'angularfire2';
 
 import { MyApp } from './app.component';
 import { firebaseConf } from '../config';
@@ -11,7 +11,11 @@ import { UserService } from '../providers/user/user';
 import { AuthService } from '../providers/auth/auth';
 
 const firebaseAppConfig:FirebaseAppConfig = firebaseConf;
-console.log(firebaseConf);
+
+const firebaseAuthConfig = {
+  provider:  AuthProviders.Custom,
+  method: AuthMethods.Password
+}
 
 @NgModule({
   declarations: [
@@ -20,7 +24,7 @@ console.log(firebaseConf);
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(firebaseAppConfig)
+    AngularFireModule.initializeApp(firebaseAppConfig, firebaseAuthConfig)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
