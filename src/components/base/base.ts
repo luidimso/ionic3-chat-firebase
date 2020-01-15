@@ -18,7 +18,7 @@ export abstract class BaseComponent implements OnInit{
         text: "Yes",
         handler: () => {
           this.authService.logout().then(() => {
-            this.navCtrl.setRoot("SignupPage");
+            this.navCtrl.setRoot("SigninPage");
           });
         }
       },{

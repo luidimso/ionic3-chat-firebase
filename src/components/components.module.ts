@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
-import { BaseComponent } from './base/base';
+import { LoggedHeaderComponent } from './logged-header/logged-header';
+import { IonicModule } from 'ionic-angular';
+
 @NgModule({
-	declarations: [BaseComponent],
-	imports: [],
-	exports: [BaseComponent]
+	declarations: [LoggedHeaderComponent],
+	imports: [IonicModule],
+	exports: [LoggedHeaderComponent]
 })
+
 export class ComponentsModule {}
