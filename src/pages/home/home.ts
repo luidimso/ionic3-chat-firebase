@@ -26,7 +26,7 @@ export class HomePage {
   }
 
   onChatCreate(user:User):void{
-
+    this.navCtrl.push("ChatPage", {user: user});
   }
 
   onSignUp():void{
