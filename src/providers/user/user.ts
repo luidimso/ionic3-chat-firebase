@@ -16,8 +16,8 @@ export class UserService extends BaseService{
     this.users = this.af.database.list('/users');
   }
 
-  create(user:User):firebase.Promise<void>{
-    return this.af.database.object(`/users/${user.userId}`).set(user).catch(this.handlePromiseError);
+  create(user:User, userId:string):firebase.Promise<void>{
+    return this.af.database.object(`/users/${userId}`).set(user).catch(this.handlePromiseError);
   }
 
   userExists(username:string):Observable<boolean>{

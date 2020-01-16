@@ -42,9 +42,9 @@ export class SignupPage {
           password: formUser.password
         }).then((authState:FirebaseAuthState) => {
           delete formUser.password;
-          formUser.userId = authState.auth.uid;
+          let userId:string = authState.auth.uid;
 
-          this.userService.create(formUser).then(() => {
+          this.userService.create(formUser, userId).then(() => {
             this.navCtrl.setRoot("HomePage");
             loading.dismiss();
           }).catch((error:any) => {
