@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { AngularFire, FirebaseListObservable, FirebaseObjectObservable, FirebaseAuthState } from 'angularfire2';
 import { User } from '../../models/user.model';
 import { BaseService } from '../base/base';
 import { Observable } from 'rxjs/Observable';
@@ -8,12 +8,12 @@ import "rxjs/add/operator/catch";
 
 @Injectable()
 export class UserService extends BaseService{
-
   users:FirebaseListObservable<User[]>;
+  currentUser:FirebaseObjectObservable<User>;
 
   constructor(public af: AngularFire) {
     super();
-    this.users = this.af.database.list('/users');
+    this.listenAuthState();
   }
 
   create(user:User, userId:string):firebase.Promise<void>{
@@ -29,5 +29,24 @@ export class UserService extends BaseService{
     }).map((users:User[]) => {
       return users.length > 0;
     }).catch(this.handleObservableError);
+  }
+
+  private listenAuthState():void{
+    this.af.auth.subscribe((authState:FirebaseAuthState) => {
+      if(authState){
+        this.currentUser = this.af.database.object(`/users/${authState.auth.uid}`);
+        this.setUsers(authState.auth.uid);
+      }
+    })
+  }
+
+  private setUsers(currentUserId:string):void{
+    this.users = <FirebaseListObservable<User[]>>this.af.database.list('/users', {
+      query: {
+        orderByChild: 'name'
+      }
+    }).map((users:User[]) => {
+      return users.filter((user:User) => user.$key !== currentUserId);
+    })
   }
 }

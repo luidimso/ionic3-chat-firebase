@@ -9,6 +9,7 @@ import { MyApp } from './app.component';
 import { firebaseConf } from '../config';
 import { UserService } from '../providers/user/user';
 import { AuthService } from '../providers/auth/auth';
+import { ChatService } from '../providers/chat/chat';
 
 const firebaseAppConfig:FirebaseAppConfig = firebaseConf;
 
@@ -35,7 +36,8 @@ const firebaseAuthConfig = {
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     UserService,
-    AuthService
+    AuthService,
+    ChatService
   ]
 })
 export class AppModule {}
