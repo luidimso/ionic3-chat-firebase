@@ -10,6 +10,7 @@ import { firebaseConf } from '../config';
 import { UserService } from '../providers/user/user';
 import { AuthService } from '../providers/auth/auth';
 import { ChatService } from '../providers/chat/chat';
+import { MessageService } from '../providers/message/message';
 
 const firebaseAppConfig:FirebaseAppConfig = firebaseConf;
 
@@ -37,7 +38,8 @@ const firebaseAuthConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     UserService,
     AuthService,
-    ChatService
+    ChatService,
+    MessageService
   ]
 })
 export class AppModule {}
