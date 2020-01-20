@@ -50,4 +50,12 @@ export class HomePage {
   onSignUp():void{
     this.navCtrl.push("SignupPage")
   }
+
+  onChat(chat:Chat){
+    let userId:string = chat.$key;
+
+    this.userService.getUserById(userId).first().subscribe((user:User) => {
+      this.navCtrl.push("ChatPage", {user: user});
+    });
+  }
 }

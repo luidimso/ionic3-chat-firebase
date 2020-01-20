@@ -49,4 +49,8 @@ export class UserService extends BaseService{
       return users.filter((user:User) => user.$key !== currentUserId);
     })
   }
+
+  getUserById(userId:string):FirebaseObjectObservable<User>{
+    return <FirebaseObjectObservable<User>>this.af.database.object(`/users/${userId}`).catch(this.handleObservableError);
+  }
 }
