@@ -17,6 +17,7 @@ export class HomePage {
 
   users:FirebaseListObservable<User[]>;
   view:string = "chats";
+  chats:FirebaseListObservable<Chat[]>;
 
   constructor(public navCtrl: NavController, public userService:UserService, public authService:AuthService, public chatService: ChatService) {}
 
@@ -26,6 +27,7 @@ export class HomePage {
 
   ionViewDidLoad(){
     this.users = this.userService.users;
+    this.chats = this.chatService.chats;
   }
 
   onChatCreate(user:User):void{
