@@ -23,13 +23,15 @@ export class ChatService extends BaseService{
 
   private setChats():void{
     this.af.auth.subscribe((authState:FirebaseAuthState) => {
-      this.chats = <FirebaseListObservable<Chat[]>>this.af.database.list(`/chats/${authState.auth.uid}`, {
-        query: {
-          orderByChild: 'timestamp'
-        }
-      }).map((chats:Chat[]) => {
-        return chats.reverse();
-      }).catch(this.handleObservableError);
+      if(authState){
+        this.chats = <FirebaseListObservable<Chat[]>>this.af.database.list(`/chats/${authState.auth.uid}`, {
+          query: {
+            orderByChild: 'timestamp'
+          }
+        }).map((chats:Chat[]) => {
+          return chats.reverse();
+        }).catch(this.handleObservableError);
+      }
     })
   }
 }
