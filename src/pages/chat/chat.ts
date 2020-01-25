@@ -3,10 +3,12 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AuthService } from '../../providers/auth/auth';
 import { UserService } from '../../providers/user/user';
 import { User } from '../../models/user.model';
-import { FirebaseListObservable } from 'angularfire2';
+import { FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 import { Message } from '../../models/message.model';
 import { MessageService } from '../../providers/message/message';
 import firebase from 'firebase';
+import { Chat } from '../../models/chat.model';
+import { ChatService } from '../../providers/chat/chat';
 
 @IonicPage()
 @Component({
@@ -18,8 +20,10 @@ export class ChatPage {
   title:string;
   sender:User;
   recipient:User;
+  private chat1:FirebaseObjectObservable<Chat>;
+  private chat2:FirebaseObjectObservable<Chat>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public authService: AuthService, public userService: UserService, public messageService: MessageService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public authService: AuthService, public userService: UserService, public messageService: MessageService, public chatService: ChatService) {
   }
 
   ionViewCanEnter():Promise<boolean>{
@@ -31,6 +35,8 @@ export class ChatPage {
     this.title = this.recipient.name;
     this.userService.currentUser.first().subscribe((currentUser:User) => {
       this.sender = currentUser;
+      this.chat1 = this.chatService.getChat(this.sender.$key, this.recipient.$key);
+      this.chat2 = this.chatService.getChat(this.recipient.$key, this.sender.$key);
       this.messages = this.messageService.getMessages(this.sender.$key, this.recipient.$key);
       this.messages.first().subscribe((messages:Message[]) => {
         if(messages.length == 0){
@@ -44,7 +50,17 @@ export class ChatPage {
     if(newMessage){
       let timestamp:Object = firebase.database.ServerValue.TIMESTAMP;
 
-      this.messageService.create(new Message(this.sender.$key, newMessage, timestamp), this.messages);
+      this.messageService.create(new Message(this.sender.$key, newMessage, timestamp), this.messages).then(() => {
+        this.chat1.update({
+          lastMessage: newMessage,
+          timestamp: timestamp
+        });
+
+        this.chat2.update({
+          lastMessage: newMessage,
+          timestamp: timestamp
+        });
+      });
     }
   }
 }
