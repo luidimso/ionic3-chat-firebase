@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { LoggedHeaderComponent } from './logged-header/logged-header';
 import { IonicModule } from 'ionic-angular';
+import { MessageBoxComponent } from './message-box/message-box';
 
 @NgModule({
-	declarations: [LoggedHeaderComponent],
+	declarations: [LoggedHeaderComponent,
+    MessageBoxComponent],
 	imports: [IonicModule],
-	exports: [LoggedHeaderComponent]
+	exports: [LoggedHeaderComponent,
+    MessageBoxComponent]
 })
 
 export class ComponentsModule {}

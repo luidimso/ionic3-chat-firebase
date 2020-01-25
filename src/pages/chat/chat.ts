@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, Content } from 'ionic-angular';
 import { AuthService } from '../../providers/auth/auth';
 import { UserService } from '../../providers/user/user';
 import { User } from '../../models/user.model';
@@ -22,6 +22,7 @@ export class ChatPage {
   recipient:User;
   private chat1:FirebaseObjectObservable<Chat>;
   private chat2:FirebaseObjectObservable<Chat>;
+  @ViewChild(Content) content:Content;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public authService: AuthService, public userService: UserService, public messageService: MessageService, public chatService: ChatService) {
   }
@@ -37,10 +38,20 @@ export class ChatPage {
       this.sender = currentUser;
       this.chat1 = this.chatService.getChat(this.sender.$key, this.recipient.$key);
       this.chat2 = this.chatService.getChat(this.recipient.$key, this.sender.$key);
+
+      let doSubscription = () => {
+        this.messages.subscribe((messages:Message[]) => {
+          this.scrollToBottom(0);
+        });
+      };
+
       this.messages = this.messageService.getMessages(this.sender.$key, this.recipient.$key);
       this.messages.first().subscribe((messages:Message[]) => {
         if(messages.length == 0){
           this.messages = this.messageService.getMessages(this.recipient.$key, this.sender.$key);
+          doSubscription();
+        } else {
+          doSubscription();
         }
       });
     });
@@ -62,5 +73,13 @@ export class ChatPage {
         });
       });
     }
+  }
+
+  private scrollToBottom(duration?:number):void{
+    setTimeout(() => {
+      if(this.content){
+        this.content.scrollToBottom(duration || 300);
+      }
+    }, 50);
   }
 }
