@@ -6,6 +6,7 @@ import { User } from '../../models/user.model';
 import { FirebaseListObservable } from 'angularfire2';
 import { Message } from '../../models/message.model';
 import { MessageService } from '../../providers/message/message';
+import firebase from 'firebase';
 
 @IonicPage()
 @Component({
@@ -40,6 +41,10 @@ export class ChatPage {
   }
 
   sendMessage(newMessage:string):void{
-    this.messages.push(newMessage);
+    if(newMessage){
+      let timestamp:Object = firebase.database.ServerValue.TIMESTAMP;
+
+      this.messageService.create(new Message(this.sender.$key, newMessage, timestamp), this.messages);
+    }
   }
 }
