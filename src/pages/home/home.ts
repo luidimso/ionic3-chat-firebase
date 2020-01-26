@@ -58,4 +58,31 @@ export class HomePage {
       this.navCtrl.push("ChatPage", {user: user});
     });
   }
+
+  filterItems(event:any):void{
+    let search:string = event.target.value;
+
+    this.users = this.userService.users;
+    this.chats = this.chatService.chats;
+
+    if(search){
+      switch(this.view){
+        case 'chats':
+          this.chats = <FirebaseListObservable<Chat[]>>this.chats.map((chats:Chat[]) => {
+            return chats.filter((chat:Chat) => {
+              return (chat.title.toLowerCase().indexOf(search.toLowerCase()) > -1);
+            });
+          });
+        break;
+
+        case 'users':
+          this.users = <FirebaseListObservable<User[]>>this.users.map((users:User[]) => {
+            return users.filter((user:User) => {
+              return (user.name.toLowerCase().indexOf(search.toLowerCase()) > -1);
+            });
+          });
+        break;
+      }
+    }
+  }
 }
