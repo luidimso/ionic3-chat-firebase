@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, IonicPage } from 'ionic-angular';
+import { NavController, IonicPage, MenuController } from 'ionic-angular';
 import { FirebaseListObservable } from 'angularfire2';
 import { User } from '../../models/user.model';
 import { UserService } from '../../providers/user/user';
@@ -19,7 +19,7 @@ export class HomePage {
   view:string = "chats";
   chats:FirebaseListObservable<Chat[]>;
 
-  constructor(public navCtrl: NavController, public userService:UserService, public authService:AuthService, public chatService: ChatService) {}
+  constructor(public navCtrl: NavController, public userService:UserService, public authService:AuthService, public chatService: ChatService, public menuCtrl: MenuController) {}
 
   ionViewCanEnter():Promise<boolean>{
     return this.authService.authenticated;
@@ -28,6 +28,7 @@ export class HomePage {
   ionViewDidLoad(){
     this.users = this.userService.users;
     this.chats = this.chatService.chats;
+    this.menuCtrl.enable(true, 'user-menu');
   }
 
   onChatCreate(user:User):void{

@@ -11,6 +11,7 @@ import { UserService } from '../providers/user/user';
 import { AuthService } from '../providers/auth/auth';
 import { ChatService } from '../providers/chat/chat';
 import { MessageService } from '../providers/message/message';
+import { ComponentsModule } from '../components/components.module';
 
 const firebaseAppConfig:FirebaseAppConfig = firebaseConf;
 
@@ -26,7 +27,8 @@ const firebaseAuthConfig = {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(firebaseAppConfig, firebaseAuthConfig)
+    AngularFireModule.initializeApp(firebaseAppConfig, firebaseAuthConfig),
+    ComponentsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
