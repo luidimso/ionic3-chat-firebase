@@ -25,4 +25,15 @@ export class UserProfilePage {
       this.user = user;
     });
   }
+
+  onSubmit(event:Event){
+    event.preventDefault();
+    this.editUser();
+  }
+
+  private editUser(photoUrl?:string){
+    this.userService.edit({name: this.user.name, username: this.user.username, photo: photoUrl || this.user.photo || ''}).then(() => {
+      this.canEdit = false;
+    });
+  }
 }
