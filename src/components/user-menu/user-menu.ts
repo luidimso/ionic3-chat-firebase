@@ -16,6 +16,6 @@ export class UserMenuComponent extends BaseComponent{
   }
 
   onProfile():void{
-
+    this.navCtrl.push("UserProfilePage");
   }
 }
