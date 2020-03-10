@@ -12,6 +12,7 @@ import { UserService } from '../../providers/user/user';
 export class UserProfilePage {
   user:User;
   canEdit:boolean = false;
+  uploadProgress:number;
   private photo:File;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public authService: AuthService, public userService: UserService) {
@@ -33,7 +34,7 @@ export class UserProfilePage {
     if(this.photo){
       let uploadTesk = this.userService.uploadPhoto(this.photo, this.user.$key);
       uploadTesk.on('state_changed', (snapshot) => {
-
+        this.uploadProgress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
       }, (error:Error) => {
 
       }, () => {
@@ -52,6 +53,7 @@ export class UserProfilePage {
     this.userService.edit({name: this.user.name, username: this.user.username, photo: photoUrl || this.user.photo || ''}).then(() => {
       this.canEdit = false;
       this.photo = undefined;
+      this.uploadProgress = 0;
     });
   }
 }
