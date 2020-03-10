@@ -12,6 +12,7 @@ import { UserService } from '../../providers/user/user';
 export class UserProfilePage {
   user:User;
   canEdit:boolean = false;
+  private photo:File;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public authService: AuthService, public userService: UserService) {
   }
@@ -28,12 +29,29 @@ export class UserProfilePage {
 
   onSubmit(event:Event){
     event.preventDefault();
-    this.editUser();
+
+    if(this.photo){
+      let uploadTesk = this.userService.uploadPhoto(this.photo, this.user.$key);
+      uploadTesk.on('state_changed', (snapshot) => {
+
+      }, (error:Error) => {
+
+      }, () => {
+        this.editUser(uploadTesk.snapshot.downloadURL);
+      });
+    } else {
+      this.editUser();
+    }
+  }
+
+  onPhoto(event):void{
+    this.photo = event.target.files[0];
   }
 
   private editUser(photoUrl?:string){
     this.userService.edit({name: this.user.name, username: this.user.username, photo: photoUrl || this.user.photo || ''}).then(() => {
       this.canEdit = false;
+      this.photo = undefined;
     });
   }
 }
