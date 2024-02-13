@@ -25,7 +25,7 @@ export class UserService extends BaseService{
   }
 
   userExists(username:string):Observable<boolean>{
-    return this.af.database.list('/users', {
+    return this.af.database.list('/users', { // To verify if username already exists
       query:{
         orderByChild: "username",
         equalTo: username

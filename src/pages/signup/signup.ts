@@ -37,7 +37,7 @@ export class SignupPage {
 
     this.userService.userExists(username).first().subscribe((userExists:boolean) => {
       if(!userExists){
-        this.authService.createAuthUser({
+        this.authService.createAuthUser({ // to do authentication on Firebase Auth
           email: formUser.email,
           password: formUser.password
         }).then((authState:FirebaseAuthState) => {

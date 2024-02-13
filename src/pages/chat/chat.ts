@@ -45,7 +45,7 @@ export class ChatPage {
         });
       }
 
-      let doSubscription = () => {
+      let doSubscription = () => { //subscribe to messages database changes to execute scroll to bottom action
         this.messages.subscribe((messages:Message[]) => {
           this.scrollToBottom(0);
         });
@@ -83,7 +83,7 @@ export class ChatPage {
 
   private scrollToBottom(duration?:number):void{
     setTimeout(() => {
-      if(this.content){
+      if(this.content && this.content.scrollToBottom){
         this.content.scrollToBottom(duration || 300);
       }
     }, 50);
